@@ -14,7 +14,7 @@ some of my personal projects. Wait really, how did you find this place?
 using RSTMs, and subsequently, Transformers, to generate terrible bread recipes
 
 [synesthesia, 2018](https://multithreaded.stitchfix.com/blog/2018/08/29/synesthesia/) - 
-we tried to use personal styling data from Stitch Fix to generate music and it sounded horrible. Hosted on Multithreaded
+we tried to use personal styling data from Stitch Fix to generate music and it sounded horrible
 
 [matrix factorization from scratch, 2018](/matrix-factorization) -
 Using Python & Cython to build a matrix factorization ranker on the Netflix dataset
