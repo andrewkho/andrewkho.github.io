@@ -11,7 +11,7 @@ some of my personal projects. Wait really, how did you find this place?
 ## Project Writeups ___
 
 [breadventure, 2017, updated 2021](/breadventure) -
-using RSTMs, and subsequently, Transformers, to generate terrible bread recipes
+using LSTMs, and subsequently, Transformers, to generate terrible bread recipes
 
 [synesthesia, 2018](https://multithreaded.stitchfix.com/blog/2018/08/29/synesthesia/) - 
 we tried to use personal styling data from Stitch Fix to generate music and it sounded horrible
