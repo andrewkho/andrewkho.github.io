@@ -23,12 +23,14 @@ email: "***@gmail.com"
 description: >- # this means to ignore newlines until "baseurl:"
   I'm Andrew Ho, a programmer/researcher/engineer/scientist. This is a place
   for me to jot down notes on my personal projects. 
+
 baseurl: "" # the subpath of your site, e.g. /blog
 domain: andrewkho.github.io 
 url: https://andrewkho.github.io # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: ho_andrew
-github_username:  andrewkho
-# linkedin_username:  andrew-ho-158270139
+
+twitter_username:  ho_andrew
+github_username:   andrewkho
+linkedin_username: ho-andrew
 
 # Build settings
 theme: minima
