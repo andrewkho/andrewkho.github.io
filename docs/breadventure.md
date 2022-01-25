@@ -23,6 +23,8 @@ Things have come such a long way in such a short time.
 I was severely limited by the 3GB desktop GPU and the only model I was able to fit on there for fine-tuning was `distilgpt2`.
 The results were somewhat better than the 2018 version, although not by miles. I think the main thing I noticed was it had a better time keeping track of specific ingredients in the blurb, ingredients list, and directions.
 
+I'm pretty sure these recipes would do much better with the larger models. If only I wasn't too cheap to rent a cloud GPU...
+
 ## Generated recipes
 
 Here's a couple of recipes I cherry-picked from the `distilgpt2` model, fine-tuned with the recipe data. I gave it the prompt "Sourdough Country Loaf" and "The Spanish Inquisition". I added some formatting to make it easier to read on this site.
