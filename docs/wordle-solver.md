@@ -15,7 +15,7 @@ Even my mom's been sharing her daily scores in my family's group chat.
 
 If you don't want to read all this nonsense, the approach that worked for me was A2C (Advantage Actor Critic), a policy gradient method.
 I used a staged training approach where I progressively trained the network to solve harder and harder problems and warmstarted each time it saw a more difficult problem.
-I also designed a policy neural net where instead of learning the space of ~13k possible discrete actions, the model only needed to learn 130 outputs.
+I also designed a neural net where instead of learning the full space of ~13k possible discrete actions, the model only needed to learn 130 outputs.
 
 I also tried Deep-Q learning (DQN), but it didn't seem to work for me on the full sized problem.
 I started to experiment with Soft-Actor Critic (SAC) before I realized A2C with bootstrapped training was going to work on the full problem size.
@@ -52,6 +52,14 @@ The rough math looked like: blah blah blah
 
 ## Deep Learning
 Enter model-based approaches, where you try to approximate the Q-function with some parameters.
+
+
+
+
+
+#####
+
+As I learned on [this post](https://leancrew.com/all-this/2022/01/wordle-letters/) the actual problem is somewhat simpler, in that, at the time of this post, there are only 2315 words that can be used as answers to wordle, although there are still 13k allowed words.
 
 ___
 [Back to projects page](/)
