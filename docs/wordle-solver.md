@@ -14,7 +14,7 @@ Even my mom's been sharing her daily scores in my family's group chat.
 ## TL;DR
 
 If you don't want to read all this nonsense, the approach that worked for me was A2C (Advantage Actor Critic), a policy gradient method.
-I used a staged training approach where I progressively trained the network to solve harder and harder problems and warmstarted each time it saw a more difficult problem.
+I used a staged training approach where I progressively trained the network to solve harder and harder problems (through increasing vocabulary size) and warm-started each time it started a more difficult problem.
 I also designed a neural net where instead of learning the full space of ~13k possible discrete actions, the model only needed to learn 130 outputs.
 
 I also tried Deep-Q learning (DQN), but it didn't seem to work for me on the full sized problem.
@@ -46,15 +46,85 @@ However, in my experiments with it, it often took more guesses than I took, and 
 After scratching my golang itch and reimplementing the minimax in go, I figured the next thing I should try to do is incorporate some sort of information on how frequenty certain words are.
 In the Minimax problem there are ~13k possible words to guess, and the best one in a given situation probably maximizes some expectation, which is exactly what [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) is trying to do. 
 
-My first thought was to come up with some clever state vector and then do dynamic programming to figure out the optimal strategy.
+In the Reinforcement Learning setting, you are an agent in some state, you can take some action, and the environment will update your state based on the action you take.
+The goal of the agent is to choose learn the policy that, given a current state, chooses the action that maximizes the agent's total rewards.
+
+>> Picture of Wordle state and actions
+
+For small problems you can use value or policy iteration techniques to get to the optimal policy.
 Unfortunately I wasn't able to come up with a tractable problem. 
-The rough math looked like: blah blah blah
+One way to represent the state is, for each letter, to track whether it's been attempted, and if it has, which spaces it's still possible for (i.e. yes, maybe, no for each of the 5 spots).
+You could store this in a binary vector of size 26 + 3*5*26, width 416.
+The full state space has a mere 2^26 * 3^5^26 possibilities.
+
+So ignoring for now the fact that that's an astronimically large number, one approach to RL is to ask, given my current state, what's the action that maximizes my expected reward?
+You could store this data in a 2D array, a "Q-table", indexed by the current state, and the set of available discrete actions, with the values as the expected reward for taking an action in a given state.
+Once the table is filled in, you just choose the action with the largest expected value given your current state, play the word, and then see what state you end up in next.
+
+If the problem was tractable, you could then implement the mechanics of filling in this table with dynamic programming, using either value or policy iteration and you'd basically be done at that point.
 
 ## Deep Learning
-Enter model-based approaches, where you try to approximate the Q-function with some parameters.
+
+Enter model-based approaches, where you use some parameterized function to approximate the Q-table , say a linear combination of the state vector.
+Deep Q learning is just using a neural network as this function approximator. 
+More recently however, Policy Gradient methods seem to have had more success than Deep Q learning.
+I tried both [Deep Q learning](https://arxiv.org/abs/1312.5602) and [Advantage Actor Critic (A2C)](https://arxiv.org/abs/1602.01783) methods because they had example implementations in Pytorch Lightning, which made it easy to get started. 
+I highly recommend the papers and [this youtube series](https://youtu.be/fevMOp5TDQs) of lectures as well as they're very digestible.
+
+The idea behind policy gradients is really damn cool. 
+Basically if you have a discrete action space (like we do in the case of Wordle), gradient descent doesn't work well because the Agent's approach is to choose the action that maximizes some expectation, and for lack of better words, maximums make gradients sad.
+The trick with policy gradients is to make the Agent choose actions probabilistically, and now based on your loss function, you can nudge the Agent to make that action more or less probable.
+
+## State and Action representation
+
+>> Picture of neural net architecture
+
+The state vector I used was an integer vector of size 417, one for the number of remaining turns, and the rest to represent the state I described above.
+
+A naive approach to the approximator would be to take the 13k actions as the output layer of say an MLP (multilayer perceptron), and have your agent learn that state space.
+However for Wordle, there's a lot of information in the characters that make up the words, and I didn't want that to go to waste.
+
+The neural network I designed for both DQN and A2C takes this vector as input, feeds it through an MLP with some hidden layers to an output layer of size 130. 
+Because the output word has a fixed size (5) I one-hot encoded every word in the vocabulary to get a 130-wide one-hot representation for the word (26*5).
+Taking the dot-product of the MLP output layer and this matrix of one-hot encoded words gets you a single value for each of the 13k possible actions.
+
+This is essentially saying that at each of the 5 positions, every character has a value (the output of the feed forward network), and the value of the whole word is the sum of those values.
+For Deep Q learning, we use this as the predicted Q-value of taking this action in the given state. For policy gradients, we pass this through a softmax layer to get probabilities.
+
+## Wordle Environment and Training
+
+All that's missing now is the Wordle environment and to train these networks.
+
+I broke the problem up into tiny, small, medium, and large vocabularies to test that things were working correctly.
+I highly recommend you do this if you're starting on a new project.
+
+The first problem/testing ground had a vocabulary of 100 words, and for the environment to always choose the same word as output, so basically no randomness. If your model couldn't figure this out, there was a serious problem somewhere.
+
+The next step up was the same 100 words, but randomly choosing between 2 outputs.
+I caught a few bugs here around network setup and also related to mutable states (I since refactored away mutable states as much as possible, but this is why you don't make things mutable)!
+
+Once I was fairly confident that most of the big bugs were out, it's time to start training on real problems. 
+The first small problem was the same 100 word vocabulary, but now the environemtn was randomizing between all of the words.
+
+>> Example guesses 
+
+This took the agent around 500k - 700k games to learn to play well, with around a 96% win rate, averaging 2.5 guesses per game.
+At this point I didn't really need it to do better because it wasn't working on the full game.
+
+The medium problem had a vocabulary size of 1000, with all words as possible targets. 
+The A2C agent was able to learn this game from scratch after playing ~5M games.
+It had a win rate over 99% and 3.5 turns per game. 
+
+The full sized problem has 13k valid words, [however I learned recently that only 2315 are eligible as targets.](https://leancrew.com/all-this/2022/01/wordle-letters/) This makes the problem still quite difficult but much easier than 13k vocab with 13k possible targets!
+I struggled to get this one going from scratch, with millions of games played and no signs of learning. 
+
+What worked was to warm-start from the model that trained on the 1000-word training set.
+This had fantastic results. With network architecture and state designed the way they were, the new model was able to use what it learned from the smaller vocab set and put it to use immediately on the full set. 
+The model is still learning but it's at around a 98% win rate, averaging ~4.13 guesses per turn, however the model is still improving.
+I don't quite think this is human-level performance yet, my gut says that's somewhere in the low to mid 3's.
 
 
-
+ >> training curves
 
 
 #####
