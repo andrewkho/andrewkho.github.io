@@ -46,7 +46,7 @@ I thought maybe a Wordle solver would be the way to go.
 I was curious about what other people have been trying, and one of the first hits to come up was this [post on a minimax method](https://towardsdatascience.com/automatic-wordle-solving-a305954b746e).
 The approach described there is to choose the word that minimzes the worst case scenario.
 The author tested it's worst-case performance as 5 guesses, which is extremely good for such a simple heuristic!
-However, in my experiments with it, it often took more guesses than I took, and I'm quite the notice.
+However, in my experiments with it, it often took more guesses than I took, and I'm quite the novice.
 
 ## Reinforcement Learning
 
@@ -149,8 +149,12 @@ I don't quite think this is human-level performance yet, my gut says that's some
 
 The model so far is doing alright, though I think it has a ways to go before getting to human level.
 It doesn't seem like it will be particularly hard to get this to work, but I'm a bit annoyed at how many games it takes to learn!
+Another side note is that it's pretty great how good a heuristic can perform, but that isn't why we have side projects is it -.-;;;;
+
+
 
 Looking at some sampled output from the model, it does seem to have settled into a strategy of selecting `STARE` and then some version of `CLINK` or `CLINE` or `CLEAN` given the result of the input.
+This seems to match up pretty well with the "Wheel of Fortune" approach of going `RSTLNE`.
 <a href="https://wordle-rl.herokuapp.com">I encourage you to try, but given this is hosted on Heroku free, you may need to give it a minute as the instance spins up.</a> 
 Currently it has a "Goal" mode where you give it a word and it'll play 6 turns, and a "Suggestor" mode that'll give you a suggestion if you tell it what you've tried and the wordle responses so far.
 
