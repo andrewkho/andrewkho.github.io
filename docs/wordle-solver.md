@@ -90,7 +90,7 @@ The trick with policy gradients is to make the Agent choose actions probabilisti
 
 The state vector I used was an integer vector of size 417, one for the number of remaining turns, and the rest to represent the state I described above.
 
-A naive approach to the approximator would be to take the 13k actions as the output layer of say an MLP (multilayer perceptron), and have your agent learn that state space.
+A naive approach to the approximator would be to take the 13k actions as the output layer of say an MLP (multilayer perceptron), and have your agent learn that action space.
 However for Wordle, there's a lot of information in the characters that make up the words, and I didn't want that to go to waste.
 
 The neural network I designed for both DQN and A2C takes this vector as input, feeds it through an MLP with some hidden layers to an output layer of size 130. 
