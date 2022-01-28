@@ -98,7 +98,7 @@ Because the output word has a fixed size (5) I one-hot encoded every word in the
 Taking the dot-product of the MLP output layer and this matrix of one-hot encoded words gets you a single value for each of the 13k possible actions.
 
 This is essentially constraining the value of each word, given an input state, to be the sum of it's letters. 
-It's not clear if this is too restrictive, but it's given decent results so far.
+It's not clear if this is too restrictive, and it might be a good idea to learn embeddings for the encoded words first, but it's given decent results so far.
 For Deep Q learning, we use this as the predicted Q-value of taking this action in the given state. For policy gradients, we pass this through a softmax layer to get probabilities.
 
 ## Wordle Environment and Training
