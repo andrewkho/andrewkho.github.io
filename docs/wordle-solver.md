@@ -72,10 +72,15 @@ One way to represent the state is, for each letter, to track whether it's been a
 You could store this in a binary vector of size 26 + 3*5*26, width 416.
 The full state space has a mere 2^26 * 3^5^26 possibilities.
 
+Most of these states are unreachable though. 
+A smaller bound on the problem size is that there are 13k actions you could take at each turn.
+After each of these steps, the game can respond with one of 3^5 combinations of No's, Maybe's, and Yes's. 
+So you could think of this as (13k * 3^5)^6 possible sequences, approx. 10^38.
+
 <center><img src="../assets/wordle-state.png" height="400" /></center>
 >> Picture of Wordle Debugging state, target word was "WHEEL", it won on the 6th try.
 
-So ignoring for now the fact that that's an astronimically large number, one approach to RL is to ask, given my current state, what's the action that maximizes my expected reward?
+So ignoring for now the fact that that's still an astronimically large number, one approach to RL is to ask, given my current state, what's the action that maximizes my expected reward?
 You could store this data in a 2D array, a "Q-table", indexed by the current state, and the set of available discrete actions, with the values as the expected reward for taking an action in a given state.
 Once the table is filled in, you just choose the action with the largest expected value given your current state, play the word, and then see what state you end up in next.
 This is the value iteration approach.
