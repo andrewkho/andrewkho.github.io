@@ -19,9 +19,12 @@ If you don't want to read all this nonsense, the approach that worked for me was
 I used a staged training approach where I progressively trained the network to solve harder and harder problems (through increasing vocabulary size) and warm-started each time it started a more difficult problem.
 I also designed a neural net where instead of learning the full space of ~13k possible discrete actions, the model only needed to learn 130 outputs.
 
-Because of letter scarcity, the model was bad at some words like `PIZZA`.
+Because of letter scarcity, the model was pretty bad at some words like `PIZZA`.
 To help with this, I set up a "recent losses" FIFO queue with fixed capacity, and whenever the model lost in training, pushed the target word on to it.
-Whenever the environment reset, I set a 10% probability of drawing a word from the recent losses queue instead of randomly from the vocabulary, enabling the model to get more practice on the words it was struggling with. This helped halve the rate at which the model lost games, going from 2% to 1%. 
+Whenever the environment reset, I set a 10% probability of drawing a word from the recent losses queue instead of randomly from the vocabulary, enabling the model to get more practice on the words it was struggling with.
+Words it was struggling with would end up in the queue more often, giving it even more chances to practice.
+Once it figured it out and was solving consistently, they would slowly be replaced by new challenging words.
+This approach helped halve the rate at which the model lost games, going from 2% to 1%.
 It now handles `PIZZA` quite well.
 
 I also tried Deep-Q learning (DQN), but it didn't seem to work for me on the full sized problem.
