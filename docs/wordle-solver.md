@@ -12,14 +12,20 @@ Jan 2022
 
 [You can test out the Deep RL agent yourself here.](https://wordle-rl.herokuapp.com/) (This is hosted on free tier so please be patient if it needs up to a minute to spin up).
 
+The current best model I trained played a total of around 20M games before it was decently good, and now has ~99% win rate, averaging less than 4 guesses per game. 
+It's still improving as I write this.
+
 If you don't want to read all this nonsense, the approach that worked for me was A2C (Advantage Actor Critic), a policy gradient method.
 I used a staged training approach where I progressively trained the network to solve harder and harder problems (through increasing vocabulary size) and warm-started each time it started a more difficult problem.
 I also designed a neural net where instead of learning the full space of ~13k possible discrete actions, the model only needed to learn 130 outputs.
 
+Because of letter scarcity, the model was bad at some words like `PIZZA`.
+To help with this, I set up a "recent losses" FIFO queue with fixed capacity, and whenever the model lost in training, pushed the target word on to it.
+Whenever the environment reset, I set a 10% probability of drawing a word from the recent losses queue instead of randomly from the vocabulary, enabling the model to get more practice on the words it was struggling with. This helped halve the rate at which the model lost games, going from 2% to 1%. 
+It now handles `PIZZA` quite well.
+
 I also tried Deep-Q learning (DQN), but it didn't seem to work for me on the full sized problem.
 I started to experiment with Soft-Actor Critic (SAC) before I realized A2C with bootstrapped training was going to work on the full problem size.
-
-The current best model I trained played a total of around 20M games before it was decently good (~98% win rate, average about 4 guesses per game). It's still improving as I write this.
 
 ____
 <br/>
