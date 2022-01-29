@@ -62,8 +62,9 @@ However, in my experiments with it, it often took more guesses than I took, and 
 After scratching my golang itch and reimplementing the minimax in go, I figured the next thing I should try to do is incorporate some sort of information on how frequenty certain words are.
 In the Minimax problem there are ~13k possible words to guess, and the best one in a given situation probably maximizes some expectation, which is exactly what [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) is trying to do. 
 
-In the Reinforcement Learning setting, you are an agent in some state, you can take some action, and the environment will update your state based on the action you take.
-The goal of the agent is to choose learn the policy that, given a current state, chooses the action that maximizes the agent's total rewards.
+In the Reinforcement Learning setting, you are an agent with some notion of state, and are able to take some action.
+The environment will update the state based on the action you take.
+The goal of the agent is to learn the policy that, given a current state, chooses the action that maximizes the agent's total expected rewards.
 
 For small problems you can use value or policy iteration techniques to get to the optimal policy.
 Unfortunately I wasn't able to come up with a tractable problem. 
@@ -77,8 +78,7 @@ The full state space has a mere 2^26 * 3^5^26 possibilities.
 So ignoring for now the fact that that's an astronimically large number, one approach to RL is to ask, given my current state, what's the action that maximizes my expected reward?
 You could store this data in a 2D array, a "Q-table", indexed by the current state, and the set of available discrete actions, with the values as the expected reward for taking an action in a given state.
 Once the table is filled in, you just choose the action with the largest expected value given your current state, play the word, and then see what state you end up in next.
-
-If the problem was tractable, you could then implement the mechanics of filling in this table with dynamic programming, using either value or policy iteration and you'd basically be done at that point.
+This is the value iteration approach.
 
 ## Deep Learning
 
