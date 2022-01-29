@@ -59,7 +59,7 @@ However, in my experiments with it, it often took more guesses than I took, and 
 
 ## Reinforcement Learning
 
-After scratching my golang itch and reimplementing the minimax in go, I figured the next thing I should try to do is incorporate some sort of information on how frequenty certain words are.
+After scratching my golang itch and reimplementing the minimax in go, I figured the next thing I should try to do is incorporate some sort of information on how frequent certain words are.
 In the Minimax problem there are ~13k possible words to guess, and the best one in a given situation probably maximizes some expectation, which is exactly what [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) is trying to do. 
 
 In the Reinforcement Learning setting, you are an agent with some notion of state, and are able to take some action.
