@@ -94,7 +94,7 @@ The trick with policy gradients is to make the Agent choose actions probabilisti
 
 ## State and Action representation
 
-<center><img src="../assets/wordle-net.png" height="325" /></center>
+<center><img src="../assets/wordle-net-a2c.png" height="325" /></center>
 >> Wordle-Net, simply feed-forward and dot with vocabulary encodings.
 
 The state vector I used was an integer vector of size 417, one for the number of remaining turns, and the rest to represent the state I described above.
