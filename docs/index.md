@@ -10,7 +10,7 @@ some of my personal projects. Wait really, how did you find this place?
 
 ## Project Writeups ___
 
-[wordle solver, 2021](/wordle-solver) -
+[wordle solver, 2022](/wordle-solver) -
 deep reinforcement learning on the hit pandemic game, "Wordle"!
 
 [breadventure, 2018, updated 2021](/breadventure) -
